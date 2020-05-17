@@ -237,7 +237,7 @@
             },
             methods: {
                 getAllUsers(){
-                    axios.get("http://localhost/vue-project/process.php?action=read").then(function(response){
+                    axios.get("/process.php?action=read").then(function(response){
                         if(response.data.error){
                             app.errorMsg = response.data.message;
                         }
@@ -248,7 +248,7 @@
                 },
                 addUser(){
                     var formData = app.toFormData(app.newUser);
-                    axios.post("http://localhost/vue-project/process.php?action=create", formData).then(function(response){
+                    axios.post("/process.php?action=create", formData).then(function(response){
                         app.newUser = {name: "",email: "",phone: "",courses: "",Score: ""};
                         if(response.data.error){
                             app.errorMsg = response.data.message;
@@ -263,7 +263,7 @@
                     var formData = app.toFormData(app.currentUser);
                     console.log(app.currentUser);
                     
-                    axios.post("http://localhost/vue-project/process.php?action=update", formData).then(function(response){
+                    axios.post("/process.php?action=update", formData).then(function(response){
                         app.currentUser = {};
                         if(response.data.error){
                             app.errorMsg = response.data.message;
@@ -276,7 +276,7 @@
                 },
                 deleteUser(){
                     var formData = app.toFormData(app.currentUser);
-                    axios.post("http://localhost/vue-project/process.php?action=delete", formData).then(function(response){
+                    axios.post("/process.php?action=delete", formData).then(function(response){
                         app.currentUser = {};
                         if(response.data.error){
                             app.errorMsg = response.data.message;
