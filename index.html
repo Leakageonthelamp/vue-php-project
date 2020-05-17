@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/f6c86e8359.js" crossorigin="anonymous"></script>
+    <style type="text/css">
+        #overlay{
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.6);
+        }
+    </style>
+    <title>Vue | Classroom Application</title>
+</head>
+
+<body>
+    <div id="app">
+        <div class="container-fluid bg-dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p class="text-left text-light display-4 pt-2 ml-2" style="font-size: 25px;">Classroom Application</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row mt-3">
+                <div class="col-lg-6">
+                    <h3 class="text-info">Add new student</h3>
+                </div>
+            </div>
+
+            <hr class="bg-info">
+            <form action="#" method="post">
+            <div class="row mt-3">
+                <div class="col-lg-3">
+                    <label for="exampleInputEmail1">Name</label>
+                    <input type="text" name="name" class="
+                    form-control" placeholder="Name" v-model="newUser.name">
+                </div>
+                <div class="col-lg-3">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input type="email" name="email" class="
+                    form-control" placeholder="E-Mail" v-model="newUser.email">
+                </div>
+                <div class="col-lg-3">
+                    <label for="exampleInputEmail1">Phone number</label>
+                    <input type="tel" name="phone" class="
+                    form-control" placeholder="Phone" v-model="newUser.phone">
+                </div>
+                <div class="col-lg-2">
+                    <label for="exampleInputEmail1" style="color:white ">Dis</label>
+                    <button class="btn-block btn-info align-items-right form-control" @click="addUser(); clearMsg();">
+                        <i class="fas fa-share-square"></i>&nbsp;&nbsp;Submit
+                    </button>
+                </div>
+            </div>
+        </form>
+
+            <hr class="bg-info">
+            <div class="alert alert-danger" v-if="errorMsg">
+                {{ errorMsg }}
+            </div>
+            <div class="alert alert-success" v-if="successMsg">
+                {{ successMsg }}
+            </div>
+
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Search by Courses Name
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#" @click="search=''">No select</a>
+                  <a class="dropdown-item" href="#" @click="search='Computer Science'">Computer Science</a>
+                  <a class="dropdown-item" href="#" @click="search='Business'">Business</a>
+                  <a class="dropdown-item" href="#" @click="search='Humanities'">Humanities</a>
+                  <a class="dropdown-item" href="#" @click="search='Data Science'">Data Science</a>
+                  <a class="dropdown-item" href="#" @click="search='Personal Development'">Personal Development</a>
+                  <a class="dropdown-item" href="#" @click="search='Art and Design'">Art and Design</a>
+                  <a class="dropdown-item" href="#" @click="search='Programming'">Programming</a>
+                  <a class="dropdown-item" href="#" @click="search='Engineering'">Engineering</a>
+                  <a class="dropdown-item" href="#" @click="search='Health and Medicine'">Health and Medicine</a>
+                  <a class="dropdown-item" href="#" @click="search='Mathematics'">Mathematics</a>
+                  <a class="dropdown-item" href="#" @click="search='Science'">Science</a>
+                  <a class="dropdown-item" href="#" @click="search='Social Sciences'">Social Sciences</a>
+                  <a class="dropdown-item" href="#" @click="search='Education and Teaching'">Education and Teaching</a>
+                </div>
+              </div>
+
+            <!--Displaying Record -->
+            <div class="row mt-3">
+                <div class="col-lg-12">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr class="text-center bg-info text-light">
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Courses</th>
+                            <th>Score</th>
+                            <th>Average Score</th>
+                            <th>Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text-center" v-for="user in filteredusers">
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.name }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.phone }}</td>
+                                <td>{{ user.courses }}</td>
+                                <td>{{ user.score }}</td>
+                                <td>{{ user.score }}</td>
+                                <td><a href="#" class="text-danger" @click="showDeleteModal=true; selectUser(user);"><i class="fas fa-trash-alt"></i></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="overlay" v-if="showAddModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add New User</h5>
+                        <button type="button" class="close" @click="showAddModal=false">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <form action="#" method="post">
+                            <div class="form-group">
+                                <input type="text" name="name" class="
+                                form-control form-control-lg" placeholder="Name" v-model="newUser.name">
+                            </div>
+                            <div class="form-group">
+                                <input type="email" name="email" class="
+                                form-control form-control-lg" placeholder="E-Mail" v-model="newUser.email">
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" name="phone" class="
+                                form-control form-control-lg" placeholder="Phone" v-model="newUser.phone">
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-info btn-block btn-lg" @click="showAddModal=false; addUser(); clearMsg();">Add User</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="overlay" v-if="showEditModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit User</h5>
+                        <button type="button" class="close" @click="showEditModal=false">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <form action="#" method="post">
+                            <div class="form-group">
+                                <input type="text" name="name" class="
+                                form-control form-control-lg" v-model="currentUser.name">
+                            </div>
+                            <div class="form-group">
+                                <input type="email" name="email" class="
+                                form-control form-control-lg" v-model="currentUser.email">
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" name="phone" class="
+                                form-control form-control-lg" v-model="currentUser.phone">
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-info btn-block btn-lg"
+                                @click="showEditModal=false; updateUser(); clearMsg();">Update User</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="overlay" v-if="showDeleteModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete User</h5>
+                        <button type="button" class="close" @click="showDeleteModal=false">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <h4 class="text-danger">Are you sure want to delete this user?</h4>
+                        <h5>You are deleting '{{ currentUser.name }}'</h5>
+                        <hr>
+                        <button class="btn btn-danger btn-lg" @click="showDeleteModal=false; deleteUser(); clearMsg();">Yes</button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <button class="btn btn-success btn-lg" @click="showDeleteModal=false">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+    <script>
+        var app = new Vue({
+        el: '#app',
+        data: {
+            search:'',
+            errorMsg: "",
+            successMsg: "",
+            showAddModal: false,
+            showEditModal: false,
+            showDeleteModal: false,
+            users: [],
+            newUser: {name: "",email: "",phone: "",courses: "",Score: ""},
+            currentUser: {},
+            },
+            mounted: function(){
+                this.getAllUsers();
+            },
+            methods: {
+                getAllUsers(){
+                    axios.get("http://localhost/vue-project/process.php?action=read").then(function(response){
+                        if(response.data.error){
+                            app.errorMsg = response.data.message;
+                        }
+                        else{
+                            app.users = response.data.users;
+                        }
+                    });
+                },
+                addUser(){
+                    var formData = app.toFormData(app.newUser);
+                    axios.post("http://localhost/vue-project/process.php?action=create", formData).then(function(response){
+                        app.newUser = {name: "",email: "",phone: "",courses: "",Score: ""};
+                        if(response.data.error){
+                            app.errorMsg = response.data.message;
+                        }
+                        else{
+                            app.successMsg = response.data.message;
+                            app.getAllUsers();
+                        }
+                    });
+                },
+                updateUser(){
+                    var formData = app.toFormData(app.currentUser);
+                    console.log(app.currentUser);
+                    
+                    axios.post("http://localhost/vue-project/process.php?action=update", formData).then(function(response){
+                        app.currentUser = {};
+                        if(response.data.error){
+                            app.errorMsg = response.data.message;
+                        }
+                        else{
+                            app.successMsg = response.data.message;
+                            app.getAllUsers();
+                        }
+                    });
+                },
+                deleteUser(){
+                    var formData = app.toFormData(app.currentUser);
+                    axios.post("http://localhost/vue-project/process.php?action=delete", formData).then(function(response){
+                        app.currentUser = {};
+                        if(response.data.error){
+                            app.errorMsg = response.data.message;
+                        }
+                        else{
+                            app.successMsg = response.data.message;
+                            app.getAllUsers();
+                        }
+                    });
+                },
+
+                toFormData(obj){
+                    var fd = new FormData();
+                    for(var i in obj){
+                        fd.append(i,obj[i]);
+                    }
+                    return fd;
+                },
+                selectUser(user){
+                    app.currentUser = user;
+                },
+                clearMsg(){
+                    app.errorMsg ="";
+                    app.successMsg ="";
+                },
+            },
+            computed:{
+                    filteredusers :function(){
+                        return this.users.filter((user) =>{
+                            return user.courses.match(this.search);
+                        });
+                    }
+                }
+        });
+    </script>
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</html>
