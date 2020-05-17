@@ -1,5 +1,5 @@
 <?php
-    $conn = new mysqli("localhost","root","","vue_project");
+    $conn = new mysqli("qn66usrj1lwdk1cc.cbetxkdyhwsb.us-east-1.rds.amazonaws.com","f2sl5l30lko64e1v","ry7d2ikhxetx8ymw","wdsbf71fus33zgsp");
     if($conn->connect_error){
         die("Connection Failed!".$conn->connect_error);
     }
